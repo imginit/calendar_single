@@ -1,0 +1,30 @@
+<% title "Workouts" %>
+
+<div id ="calendar">
+  <h2 id="month">
+    <%= link_to "<", :month => (@date.beginning_of_month-1).strftime("%Y-%m") %>
+    <%=h @date.strftime("%B %Y") %>
+    <%= link_to ">", :month => (@date.end_of_month+1).strftime("%Y-%m") %>
+  </h2>
+  <%= calendar_for @workouts, :year => @date.year, :month => @date.month do |calendar| %>
+    <%= calendar.head('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday') %>
+    <% calendar.day(:day_method => :workoutdate) do |date, workouts| %>
+      <%= date.day %>
+      <ul>
+        <% for @workout in workouts %>
+          <% for interval in @workout.intervals %>
+            <li>
+              <%= interval.interval_name %>
+            </li>
+          <% end %>
+	  <p>
+	    <%= link_to "Edit", edit_workout_path(@workout) %>
+	  </p>
+        <% end %>
+	<% if workouts.length == 0 %>
+	   <p><%= link_to "New", edit_workout_path(0, :date => date) %></p>
+	<% end %>
+      </ul>
+    <% end %>
+  <% end %>
+</div>
